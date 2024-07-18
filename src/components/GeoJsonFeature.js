@@ -1,31 +1,37 @@
-import { useState, useEffect } from 'react';
-import { useJsApiLoader } from '@react-google-maps/api';
-import { REACT_APP_GOOGLE_MAPS_KEY } from '../constants/constant';
-import { geoJson } from '../constants/geodata';
 
-const GeoJsonFeature = ({ map }) => {
-  const { isLoaded } = useJsApiLoader({
-    id: 'google-maps-script',
-    googleMapsApiKey: REACT_APP_GOOGLE_MAPS_KEY,
+import React from 'react';
+import { GoogleMap, useLoadScript, MarkerF } from "@react-google-maps/api";
+
+const GeoJsonFeature = ({ geoJson }) => {
+  return geoJson.features.map((feature) => {
+    let position;
+    switch (feature.geometry.type) {
+      case 'Point':
+        position = {
+          lat: feature.geometry.coordinates[1],
+          lng: feature.geometry.coordinates[0],
+        };
+        break;
+      case 'LineString':
+      case 'Polygon':
+      
+        position = {
+          lat: 0, 
+          lng: 0, 
+        };
+        break;
+      default:
+        throw new Error(`Unsupported geometry type: ${feature.geometry.type}`);
+    }
+
+    return (
+      <MarkerF
+        key={feature.id}
+        position={position}
+        icon={"http://maps.google.com/mapfiles/ms/icons/green-dot.png"}
+      />
+    );
   });
-
-  const [dataLayer, setDataLayer] = useState(null);
-
-  useEffect(() => {
-    if (isLoaded && map) {
-      const dataLayer = new window.google.maps.Data();
-      dataLayer.addGeoJson(geoJson);
-      setDataLayer(dataLayer);
-    }
-  }, [geoJson, map, isLoaded]);
-
-  useEffect(() => {
-    if (dataLayer && map) {
-      dataLayer.setMap(map);
-    }
-  }, [dataLayer, map]);
-
-  return null;
 };
 
 export default GeoJsonFeature;
