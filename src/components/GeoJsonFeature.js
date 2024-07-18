@@ -2,7 +2,7 @@
 import React from 'react';
 import { GoogleMap, useLoadScript, MarkerF } from "@react-google-maps/api";
 
-const GeoJsonFeature = ({ geoJson }) => {
+const GeoJsonFeature = ({ geoJson ,onSelectFeature}) => {
   return geoJson.features.map((feature) => {
     let position;
     switch (feature.geometry.type) {
@@ -29,6 +29,7 @@ const GeoJsonFeature = ({ geoJson }) => {
         key={feature.id}
         position={position}
         icon={"http://maps.google.com/mapfiles/ms/icons/green-dot.png"}
+        onClick={() => onSelectFeature(feature)}
       />
     );
   });
