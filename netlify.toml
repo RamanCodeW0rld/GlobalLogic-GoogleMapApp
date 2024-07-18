@@ -1,14 +1,10 @@
 [headers]
-  /* {
+  [[headers]]
     for = "/*"
     [headers.values]
       Access-Control-Allow-Origin = "*"
-  }
 
-
-[headers]
-  /* {
+  [[headers]]
     for = "/google-maps-api/*"
     [headers.values]
       Cache-Control = "no-cache, no-store, must-revalidate"
-  }
